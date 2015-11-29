@@ -105,18 +105,19 @@ public class ActivityLogin extends AppCompatActivity{
                 @Override
                 public void onClick(View view) {
 
-
-                    String aadhar = ((EditText) getActivity().findViewById(R.id.aadhar_user_input_otp)).getText().toString();
-                    if(aadhar.length() != 12) {
+                    Intent intent = getActivity().getIntent();
+                    String uid = intent.getStringExtra("uid");
+                    ((EditText) getActivity().findViewById(R.id.aadhar_user_input_otp)).setText(uid);
+                    if(uid.length() != 12) {
                         Toast toast = Toast.makeText(getActivity(), "Please enter a valid 12-digit aadhar number", Toast.LENGTH_SHORT);
                         toast.show();
                         return;
                     }
 
-                    String son1 = "{ \"aadhaar-id\": \""+aadhar+"\", \"channel\":\"SMS\", \"location\": { \"type\": \"gps\", \"latitude\": \"73.2\", \"longitude\": \"22.3\", \"altitude\": \"0\" } }";
+                    String son1 = "{ \"aadhaar-id\": \""+uid+"\", \"channel\":\"SMS\", \"location\": { \"type\": \"gps\", \"latitude\": \"73.2\", \"longitude\": \"22.3\", \"altitude\": \"0\" } }";
 
                     String[] inputArr = new String[] {
-                            aadhar,
+                            uid,
                             son1,
                     };
 
@@ -125,7 +126,7 @@ public class ActivityLogin extends AppCompatActivity{
 
                     String res[] = new String[0];
                     try {
-                        res = new RequestOTPTask().execute(aadhar, son1).get();
+                        res = new RequestOTPTask().execute(uid, son1).get();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     } catch (ExecutionException e) {
@@ -209,7 +210,7 @@ public class ActivityLogin extends AppCompatActivity{
 
                         // Activity calling!!
 
-                        Intent intent = new Intent(getActivity(), MainActivity.class);
+                        Intent intent = new Intent(getActivity(), UpdateAddressActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
 
@@ -241,8 +242,7 @@ public class ActivityLogin extends AppCompatActivity{
                     httpcon.setRequestProperty("Content-Type", "application/json");
                     httpcon.setRequestProperty("Accept", "application/json");
                     httpcon.setRequestMethod("POST");
-
-
+                    httpcon.setConnectTimeout(10000);
                     httpcon.connect();
                     //write
                     OutputStream os = httpcon.getOutputStream();
@@ -303,6 +303,7 @@ public class ActivityLogin extends AppCompatActivity{
                     httpcon.setRequestProperty("Content-Type", "application/json");
                     httpcon.setRequestProperty("Accept", "application/json");
                     httpcon.setRequestMethod("POST");
+                    httpcon.setConnectTimeout(10000);
                     httpcon.connect();
                     //write
                     OutputStream os = httpcon.getOutputStream();

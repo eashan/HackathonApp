@@ -22,6 +22,7 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -102,72 +103,18 @@ public class MainActivity extends Activity {
                 //get the extras that are returned from the intent
                 String contents = intent.getStringExtra("SCAN_RESULT");
                 String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
-                Document doc = getDomElement(contents);
-                NodeList nl = doc.getElementsByTagName(KEY_AADHAAR_NO);
-
-                Element e = (Element) nl.item(0);
-                String aadhar_no = "test";
-                aadhar_no = getValue(e, KEY_AADHAAR_NO);
-
-                Log.i(TAG, aadhar_no);
 
                 Toast toast = Toast.makeText(this, "Content:" + contents + " Format:" + format, Toast.LENGTH_LONG);
                 toast.show();
                 Log.i(TAG, contents);
+                String aadharNumExtract = "";
+                int index = contents.indexOf("uid=");
+                aadharNumExtract = contents.substring(index+5, index+17);
+                Intent i=new Intent(MainActivity.this, ActivityLogin.class);
+                i.putExtra("uid", aadharNumExtract);
+                startActivity(i);
             }
         }
     }
 
-    public Document getDomElement(String xml){
-        Document doc = null;
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        try {
-
-            DocumentBuilder db = dbf.newDocumentBuilder();
-
-            InputSource is = new InputSource();
-            is.setCharacterStream(new StringReader(xml));
-            doc = db.parse(is);
-
-        } catch (ParserConfigurationException e) {
-            Log.e("Error: ", e.getMessage());
-            return null;
-        } catch (SAXException e) {
-            Log.e("Error: ", e.getMessage());
-            return null;
-        } catch (IOException e) {
-            Log.e("Error: ", e.getMessage());
-            return null;
-        }
-        // return DOM
-        return doc;
-    }
-
-    public String getValue(Element item, String str) {
-        NodeList n = item.getElementsByTagName(str);
-        return this.getElementValue(n.item(0));
-    }
-
-    public final String getElementValue( Node elem ) {
-        Node child;
-        if( elem != null){
-            if (elem.hasChildNodes()){
-                for( child = elem.getFirstChild(); child != null; child = child.getNextSibling() ){
-                    if( child.getNodeType() == Node.TEXT_NODE  ){
-                        return child.getNodeValue();
-                    }
-                }
-            }
-        }
-        return "";
-    }
-
-    public void getFromXML(String xml){
-        XmlPullParserFactory xmlPullParserFactory = XmlPullParserFactory.newInstance();
-        XmlPullParser myparser = xmlPullParserFactory.newPullParser();
-
-        myparser.setInput(xml, null);
-
-
-    }
 }
