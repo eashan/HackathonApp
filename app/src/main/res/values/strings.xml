@@ -1,8 +1,12 @@
 <resources>
     <string name="app_name">KnowYC</string>
 
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="action_logout">Logout</string>
+    <string name="aadhar_format">12 digit Aadhar Number</string>
     <string name="title_activity_chat">ChatActivity</string>
     <string name="search">Search</string>
+    <string name="title_activity_form">FormActivity</string>
+
+    <string name="hello_world">Hello world!</string>
 </resources>

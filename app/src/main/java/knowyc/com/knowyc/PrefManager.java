@@ -2,6 +2,9 @@ package knowyc.com.knowyc;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+
+import java.util.HashMap;
 
 /**
  * Created by Sumod on 28-Nov-15.
@@ -12,7 +15,7 @@ public class PrefManager {
     SharedPreferences pref;
 
     // Editor for Shared preferences
-    SharedPreferences.Editor editor;
+    Editor editor;
 
     // Context
     Context _context;
@@ -20,76 +23,63 @@ public class PrefManager {
     // Shared pref mode
     int PRIVATE_MODE = 0;
 
-    // Shared pref file name
-    private static final String PREF_NAME = "DebugCity";
+    // Shared preferences file name
+    private static final String PREF_NAME = "AndroidHive";
 
     // All Shared Preferences Keys
-    private static final String IS_LOGIN = "IsLoggedIn";
+    private static final String KEY_IS_WAITING_FOR_SMS = "IsWaitingForSms";
+    private static final String KEY_MOBILE_NUMBER = "mobile_number";
+    private static final String KEY_IS_LOGGED_IN = "isLoggedIn";
+    private static final String KEY_NAME = "name";
+    private static final String KEY_EMAIL = "email";
+    private static final String KEY_MOBILE = "mobile";
 
-    // Email address (make variable public to access from outside)
-    public static final String KEY_EMAIL = "email";
-    public static final String KEY_USERNAME = "username";
-
-    public static final String LOGIN_SESSION_CODE = "login_session_code";
-
-    public final int EMAIL_LOGIN_SESSION = 0;
-
-    public final int GOOGLE_LOGIN_SESSION = 1;
-
-    public final int FB_LOGIN_SESSION = 2;
-
-
-
-    // Constructor
     public PrefManager(Context context) {
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
     }
 
-    /**
-     * Create login session
-     */
-    public void createLoginSession(String email, int loginSessionCode) {
-        // Storing login value as TRUE
-        editor.putBoolean(IS_LOGIN, true);
-
-        // Storing email in pref
-        editor.putString(KEY_EMAIL, email);
-
-        //Storing login session code
-        editor.putInt(LOGIN_SESSION_CODE, loginSessionCode);
-
-        // commit changes
+    public void setIsWaitingForSms(boolean isWaiting) {
+        editor.putBoolean(KEY_IS_WAITING_FOR_SMS, isWaiting);
         editor.commit();
     }
 
-    public void putLoginSessionCode(int code){
-        editor.putInt(LOGIN_SESSION_CODE, code);
+    public boolean isWaitingForSms() {
+        return pref.getBoolean(KEY_IS_WAITING_FOR_SMS, false);
     }
 
-    public int getLoginSessionCode(){
-        return pref.getInt(LOGIN_SESSION_CODE, -1);
+    public void setMobileNumber(String mobileNumber) {
+        editor.putString(KEY_MOBILE_NUMBER, mobileNumber);
+        editor.commit();
     }
 
+    public String getMobileNumber() {
+        return pref.getString(KEY_MOBILE_NUMBER, null);
+    }
 
-    public String getEmail() {
-        return pref.getString(KEY_EMAIL, null);
+    public void createLogin(String name, String email, String mobile) {
+        editor.putString(KEY_NAME, name);
+        editor.putString(KEY_EMAIL, email);
+        editor.putString(KEY_MOBILE, mobile);
+        editor.putBoolean(KEY_IS_LOGGED_IN, true);
+        editor.commit();
     }
 
     public boolean isLoggedIn() {
-        return pref.getBoolean(IS_LOGIN, false);
+        return pref.getBoolean(KEY_IS_LOGGED_IN, false);
     }
 
-    public void logout() {
+    public void clearSession() {
         editor.clear();
         editor.commit();
     }
 
-    public void putUserName(String username){
-        editor.putString(KEY_USERNAME, username);
+    public HashMap<String, String> getUserDetails() {
+        HashMap<String, String> profile = new HashMap<>();
+        profile.put("name", pref.getString(KEY_NAME, null));
+        profile.put("email", pref.getString(KEY_EMAIL, null));
+        profile.put("mobile", pref.getString(KEY_MOBILE, null));
+        return profile;
     }
-
-
-
 }

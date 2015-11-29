@@ -19,8 +19,6 @@
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/linearLayoutTop"
-        android:layout_above="@id/linearLayoutBottom"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
@@ -42,7 +40,8 @@
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/upload_image_button" />
+            android:id="@+id/upload_image_button"
+            android:src="@drawable/ic_action_shoot"/>
 
         <EditText
             android:layout_width="match_parent"
